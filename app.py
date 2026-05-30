@@ -42,9 +42,9 @@ st.markdown("""
 
 /* ── Status ─────────────────────────────── */
 .status-ok {
-    background: #f0fdf4;
-    border: 1px solid #86efac;
-    color: #166534;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(134,239,172,0.3);
+    color: #86efac;
     border-radius: 8px;
     padding: 0.55rem 1rem;
     font-size: 0.85rem;
@@ -58,7 +58,7 @@ st.markdown("""
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #6b7280;
+    color: #9ca3af;
     margin-bottom: 0.5rem;
 }
 
@@ -101,11 +101,11 @@ st.markdown("""
 /* ── Distortion desc ────────────────────── */
 .desc-wrap {
     border-left: 3px solid #8b5cf6;
-    background: #faf5ff;
+    background: rgba(139,92,246,0.12);
     border-radius: 0 10px 10px 0;
     padding: 0.9rem 1.1rem;
     margin-top: 1rem;
-    color: #3b0764;
+    color: #e9d5ff;
     font-size: 0.875rem;
     line-height: 1.6;
 }
@@ -121,11 +121,11 @@ st.markdown("""
     display: flex;
     justify-content: space-between;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: #9ca3af;
     margin-bottom: 5px;
 }
 .bar-bg {
-    background: #e5e7eb;
+    background: rgba(255,255,255,0.12);
     border-radius: 99px;
     height: 6px;
 }
@@ -137,11 +137,11 @@ st.markdown("""
 
 /* ── Ok banner ──────────────────────────── */
 .ok-banner {
-    background: #f0fdf4;
-    border: 1px solid #86efac;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(134,239,172,0.3);
     border-radius: 10px;
     padding: 0.9rem 1.1rem;
-    color: #166534;
+    color: #86efac;
     font-size: 0.875rem;
     margin-top: 1rem;
     line-height: 1.5;
@@ -152,16 +152,17 @@ st.markdown("""
     width: 100%;
     border-collapse: collapse;
     font-size: 0.82rem;
-    color: #374151;
 }
 .detail-table td {
+    color: #e5e7eb !important;
     padding: 0.45rem 0.7rem;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
     vertical-align: top;
 }
 .detail-table td:first-child {
+    color: #a5b4fc !important;
     font-weight: 600;
-    color: #6b7280;
+    color: #9ca3af;
     white-space: nowrap;
     width: 38%;
 }

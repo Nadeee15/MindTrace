@@ -13,14 +13,166 @@ st.set_page_config(
     layout="centered",
 )
 
+# ── Custom CSS ────────────────────────────────────────────────
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+}
+.hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+.hero p {
+    font-size: 1rem;
+    opacity: 0.88;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* Card */
+.card {
+    background: white;
+    border: 1px solid #e8eaf0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* Result badge */
+.badge-ya {
+    display: inline-block;
+    background: #fef3f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.badge-tidak {
+    display: inline-block;
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.badge-jenis {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Metric card */
+.metric-card {
+    background: #f8f9ff;
+    border: 1px solid #e0e4ff;
+    border-radius: 10px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+}
+.metric-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+}
+.metric-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+.metric-sub {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.2rem;
+}
+
+/* Desc box */
+.desc-box {
+    background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+    border-left: 4px solid #6366f1;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-top: 1rem;
+}
+.desc-box strong {
+    color: #4338ca;
+}
+
+/* Progress bar custom */
+.conf-bar-wrap {
+    background: #e5e7eb;
+    border-radius: 99px;
+    height: 8px;
+    margin-top: 0.5rem;
+}
+.conf-bar-fill {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 99px;
+    height: 8px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.78rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* Hide streamlit branding */
+#MainMenu, footer {visibility: hidden;}
+header {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+
 # ── Konstanta ─────────────────────────────────────────────────
-MODEL_NAME = "indolem/indobert-base-uncased"
 M1_PATH    = "./model_1_binary"
 M2_PATH    = "./model_2_multiclass"
 MAX_LENGTH = 128
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# ── Helper: clean text ────────────────────────────────────────
+DESCRIPTIONS = {
+    "All-or-nothing"           : ("🔲", "Berpikir dalam kategori hitam-putih tanpa nuansa tengah."),
+    "Discounting the positives": ("🚫", "Mengabaikan atau meremehkan hal-hal positif yang terjadi."),
+    "Emotional Reasoning"      : ("💭", "Menganggap perasaan negatif sebagai kebenaran faktual."),
+    "Jumping to Conclusions"   : ("⚡", "Mengambil kesimpulan negatif tanpa bukti yang memadai."),
+    "Labeling"                 : ("🏷️", "Memberi label negatif secara menyeluruh pada diri atau orang lain."),
+    "Mental filter"            : ("🔍", "Fokus berlebihan pada satu detail negatif, mengabaikan sisanya."),
+    "Overgeneralization"       : ("🔄", "Menarik kesimpulan luas dari satu kejadian buruk."),
+    "Personalization and Blame": ("👉", "Menyalahkan diri sendiri atas hal-hal di luar kendali."),
+    "Should statement"         : ("📋", "Menetapkan standar kaku dengan kata 'harus' atau 'seharusnya'."),
+}
+
+# ── Helper ────────────────────────────────────────────────────
 def clean_text(text: str) -> str:
     text = str(text).lower()
     text = re.sub(r"http\S+|www\S+", " ", text)
@@ -29,12 +181,9 @@ def clean_text(text: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-# ── Load models (cached) ──────────────────────────────────────
-@st.cache_resource
+# ── Load models ───────────────────────────────────────────────
+@st.cache_resource(show_spinner=False)
 def load_models():
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-    # ── Model 1 — binary ──────────────────────────────────────
     le1     = joblib.load(f"{M1_PATH}/label_encoder.pkl")
     config1 = PeftConfig.from_pretrained(M1_PATH)
     base1   = AutoModelForSequenceClassification.from_pretrained(
@@ -44,8 +193,8 @@ def load_models():
     )
     model1 = PeftModel.from_pretrained(base1, M1_PATH)
     model1.eval().to(DEVICE)
+    tokenizer = AutoTokenizer.from_pretrained(M1_PATH)
 
-    # ── Model 2 — multi-class ─────────────────────────────────
     le2     = joblib.load(f"{M2_PATH}/label_encoder.pkl")
     config2 = PeftConfig.from_pretrained(M2_PATH)
     base2   = AutoModelForSequenceClassification.from_pretrained(
@@ -58,107 +207,163 @@ def load_models():
 
     return tokenizer, model1, le1, model2, le2
 
-# ── Fungsi prediksi ───────────────────────────────────────────
-def predict(text: str, tokenizer, model, label_encoder):
+def predict(text, tokenizer, model, label_encoder):
     cleaned = clean_text(text)
-    inputs  = tokenizer(
-        cleaned,
-        return_tensors="pt",
-        truncation=True,
-        padding=True,
-        max_length=MAX_LENGTH,
-    )
-    inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
+    inputs  = tokenizer(cleaned, return_tensors="pt", truncation=True,
+                        padding=True, max_length=MAX_LENGTH)
+    inputs  = {k: v.to(DEVICE) for k, v in inputs.items()}
     with torch.no_grad():
         logits = model(**inputs).logits
         probs  = torch.softmax(logits, dim=1).squeeze().cpu().numpy()
         pid    = int(np.argmax(probs))
     return label_encoder.inverse_transform([pid])[0], float(probs[pid])
 
-# ── Penjelasan distorsi ───────────────────────────────────────
-DESCRIPTIONS = {
-    "All-or-nothing"           : "Berpikir dalam kategori hitam-putih tanpa nuansa.",
-    "Discounting the positives": "Mengabaikan atau meremehkan hal-hal positif.",
-    "Emotional Reasoning"      : "Menganggap perasaan negatif sebagai fakta.",
-    "Jumping to Conclusions"   : "Mengambil kesimpulan tanpa bukti yang cukup.",
-    "Labeling"                 : "Memberi label negatif pada diri sendiri atau orang lain.",
-    "Mental filter"            : "Fokus berlebihan pada satu detail negatif.",
-    "Overgeneralization"       : "Menarik kesimpulan umum dari satu kejadian.",
-    "Personalization and Blame": "Menyalahkan diri sendiri atas hal di luar kendali.",
-    "Should statement"         : "Menetapkan standar kaku dengan kata 'harus'.",
-}
+# ── Hero ──────────────────────────────────────────────────────
+st.markdown("""
+<div class="hero">
+    <h1>🧠 MindTrace</h1>
+    <p>Deteksi pola pikir negatif dari teks bahasa Indonesia<br>
+    menggunakan dua model <strong>IndoBERT + LoRA</strong></p>
+</div>
+""", unsafe_allow_html=True)
 
-# ── UI ────────────────────────────────────────────────────────
-st.title("🧠 MindTrace")
-st.markdown(
-    "Deteksi pola pikir negatif dari teks bahasa Indonesia "
-    "menggunakan dua model IndoBERT + LoRA."
-)
-st.divider()
-
-with st.spinner("Memuat model, harap tunggu..."):
+# ── Load model ────────────────────────────────────────────────
+with st.spinner("⏳ Memuat model AI, harap tunggu..."):
     tokenizer, model1, le1, model2, le2 = load_models()
-st.success("Model siap!", icon="✅")
 
-st.divider()
+st.markdown("""
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;
+padding:0.6rem 1rem;margin-bottom:1.5rem;color:#15803d;font-size:0.88rem;">
+✅ &nbsp; Model siap digunakan
+</div>
+""", unsafe_allow_html=True)
 
+# ── Input ─────────────────────────────────────────────────────
+st.markdown("#### ✍️ Masukkan Teks")
 text_input = st.text_area(
-    "Masukkan teks di sini:",
-    placeholder="Contoh: Aku merasa semua orang pasti membenciku.",
-    height=120,
+    label="",
+    placeholder="Contoh: Aku merasa semua orang pasti membenciku...",
+    height=130,
+    label_visibility="collapsed"
 )
 
-col1, col2, col3 = st.columns([1, 1, 1])
+# Contoh teks
+with st.expander("💡 Coba teks contoh"):
+    samples = [
+        "Aku merasa semua orang pasti membenciku.",
+        "Kalau aku gagal sekali, berarti aku memang tidak akan pernah berhasil.",
+        "Aku harus selalu sempurna dalam semua hal.",
+        "Dia tidak membalas chatku, pasti dia marah padaku.",
+        "Hari ini aku makan bersama keluarga dan merasa senang.",
+    ]
+    for s in samples:
+        if st.button(s, key=s, use_container_width=True):
+            st.session_state["sample_text"] = s
+
+if "sample_text" in st.session_state and not text_input.strip():
+    text_input = st.session_state["sample_text"]
+
+col1, col2, col3 = st.columns([1.5, 1, 1.5])
 with col2:
     analyze = st.button("🔍 Analisis", use_container_width=True, type="primary")
 
 # ── Prediksi ──────────────────────────────────────────────────
 if analyze:
     if not text_input.strip():
-        st.warning("Teks tidak boleh kosong!")
+        st.warning("⚠️ Teks tidak boleh kosong!")
     else:
-        with st.spinner("Menganalisis..."):
-            label_bin, conf_bin = predict(text_input, tokenizer, model1, le1)
-
-        # Jalankan model 2 di luar blok spinner supaya label_multi selalu terdefinisi
+        label_bin, conf_bin     = None, None
         label_multi, conf_multi = None, None
-        if label_bin == "Ya":
-            with st.spinner("Mengklasifikasi jenis distorsi..."):
+
+        with st.spinner("Menganalisis teks..."):
+            label_bin, conf_bin = predict(text_input, tokenizer, model1, le1)
+            if label_bin == "Ya":
                 label_multi, conf_multi = predict(text_input, tokenizer, model2, le2)
 
-        st.divider()
-        st.subheader("📊 Hasil Analisis")
+        st.markdown("---")
+        st.markdown("#### 📊 Hasil Analisis")
 
+        # ── Metric cards ──────────────────────────────────────
         col_a, col_b = st.columns(2)
+
         with col_a:
-            st.metric("Model 1 — Deteksi", label_bin)
-            st.caption(f"Confidence: {conf_bin:.1%}")
+            badge = f'<span class="badge-ya">⚠️ Ada Distorsi</span>' if label_bin == "Ya" \
+                    else f'<span class="badge-tidak">✅ Normal</span>'
+            st.markdown(f"""
+<div class="metric-card">
+    <div class="metric-label">Model 1 — Deteksi</div>
+    <div style="margin: 0.4rem 0">{badge}</div>
+    <div class="metric-sub">Confidence: {conf_bin:.1%}</div>
+</div>
+""", unsafe_allow_html=True)
 
         with col_b:
-            if label_multi is not None:
-                st.metric("Model 2 — Jenis Distorsi", label_multi)
-                st.caption(f"Confidence: {conf_multi:.1%}")
+            if label_multi:
+                badge2 = f'<span class="badge-jenis">🏷️ {label_multi}</span>'
+                st.markdown(f"""
+<div class="metric-card">
+    <div class="metric-label">Model 2 — Jenis Distorsi</div>
+    <div style="margin: 0.4rem 0">{badge2}</div>
+    <div class="metric-sub">Confidence: {conf_multi:.1%}</div>
+</div>
+""", unsafe_allow_html=True)
             else:
-                st.metric("Model 2 — Jenis Distorsi", "-")
-                st.caption("Tidak ada distorsi terdeteksi")
+                st.markdown(f"""
+<div class="metric-card">
+    <div class="metric-label">Model 2 — Jenis Distorsi</div>
+    <div style="margin: 0.4rem 0"><span class="badge-tidak">— Tidak ada distorsi</span></div>
+    <div class="metric-sub">Model 2 tidak dijalankan</div>
+</div>
+""", unsafe_allow_html=True)
 
-        if label_multi is not None:
-            desc = DESCRIPTIONS.get(label_multi, "")
-            if desc:
-                st.info(f"**{label_multi}**: {desc}")
-            st.progress(conf_multi, text=f"Keyakinan model: {conf_multi:.1%}")
-        else:
-            st.success("✅ Tidak terdeteksi adanya cognitive distortion pada teks ini.")
+        # ── Penjelasan distorsi ────────────────────────────────
+        if label_multi:
+            icon, desc = DESCRIPTIONS.get(label_multi, ("🔍", ""))
+            st.markdown(f"""
+<div class="desc-box">
+    <strong>{icon} {label_multi}</strong><br>
+    <span style="color:#374151;font-size:0.92rem">{desc}</span>
+</div>
+""", unsafe_allow_html=True)
 
+            # Confidence bar
+            pct = int(conf_multi * 100)
+            st.markdown(f"""
+<div style="margin-top:1rem">
+    <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:#6b7280;margin-bottom:4px">
+        <span>Keyakinan model</span><span>{pct}%</span>
+    </div>
+    <div class="conf-bar-wrap">
+        <div class="conf-bar-fill" style="width:{pct}%"></div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+        elif label_bin == "Tidak":
+            st.markdown("""
+<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;
+padding:1rem 1.2rem;margin-top:1rem;color:#15803d;">
+✅ <strong>Teks ini tidak terdeteksi mengandung cognitive distortion.</strong><br>
+<span style="font-size:0.88rem;opacity:0.8">Pola pikir dalam teks tampak sehat dan realistis.</span>
+</div>
+""", unsafe_allow_html=True)
+
+        # ── Detail teknis ──────────────────────────────────────
         with st.expander("🔬 Detail teknis"):
             st.markdown(f"""
-| | Nilai |
+| Field | Nilai |
 |---|---|
-| **Teks asli** | {text_input} |
-| **Teks setelah preprocessing** | {clean_text(text_input)} |
-| **Model 1 output** | {label_bin} ({conf_bin:.4f}) |
-| **Model 2 output** | {label_multi if label_multi is not None else "-"} |
+| **Teks asli** | {text_input[:80]}{"..." if len(text_input)>80 else ""} |
+| **Setelah preprocessing** | {clean_text(text_input)[:80]} |
+| **Model 1** | {label_bin} ({conf_bin:.4f}) |
+| **Model 2** | {label_multi if label_multi else "—"} {f"({conf_multi:.4f})" if conf_multi else ""} |
+| **Device** | {str(DEVICE).upper()} |
 """)
 
-st.divider()
-st.caption("MindTrace — Deteksi Pola Pikir Negatif | IndoLEM-IndoBERT + LoRA")
+# ── Footer ────────────────────────────────────────────────────
+st.markdown("""
+<div class="footer">
+    🧠 MindTrace &nbsp;·&nbsp; IndoLEM-IndoBERT + LoRA &nbsp;·&nbsp;
+    Dataset: Cognitive Distortion Bahasa Indonesia (Universitas Udayana)
+</div>
+""", unsafe_allow_html=True)

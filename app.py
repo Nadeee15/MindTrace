@@ -153,17 +153,6 @@ st.markdown("""
     line-height: 1.5;
 }
 
-/* ── Warning banner ─────────────────────── */
-.warn-banner {
-    background: rgba(251,191,36,0.1);
-    border: 1px solid rgba(251,191,36,0.3);
-    border-radius: 8px;
-    padding: 0.5rem 0.9rem;
-    color: #fbbf24;
-    font-size: 0.8rem;
-    margin-bottom: 0.6rem;
-    line-height: 1.5;
-}
 
 /* ── Detail table ───────────────────────── */
 .detail-table {
@@ -229,20 +218,12 @@ SAMPLES = [
 
 # ── Helpers ───────────────────────────────────────────────────
 def clean_text(text: str) -> str:
-    """
-    Harus SAMA PERSIS dengan clean_text_light di notebook training.
-    $ sengaja TIDAK dihapus agar konsisten dengan data training.
-    """
     text = str(text).lower()
     text = re.sub(r"http\S+|www\S+", " ", text)
     text = re.sub(r"@\w+", " ", text)
-    text = re.sub(r"#", " ", text)
+    text = re.sub(r"[#$]", " ", text)   # hapus # dan $
     text = re.sub(r"\s+", " ", text).strip()
     return text
-
-def has_special_chars(text: str) -> bool:
-    """Cek apakah teks mengandung karakter khusus seperti $."""
-    return bool(re.search(r"[$%^&*]", text))
 
 @st.cache_resource(show_spinner=False)
 def load_models():
@@ -298,15 +279,6 @@ if "txt" not in st.session_state:
 text_input = st.text_area("", value=st.session_state.txt,
     placeholder="Ketik atau tempel teks di sini...",
     height=120, label_visibility="collapsed", key="main_input")
-
-# Peringatan jika ada karakter khusus seperti $
-if text_input and has_special_chars(text_input):
-    st.markdown(
-        '<div class="warn-banner">⚠️ Teks mengandung karakter khusus (seperti <b>$</b>) '
-        'yang tidak dikenal model. Hasil analisis mungkin kurang akurat. '
-        'Coba hapus karakter tersebut.</div>',
-        unsafe_allow_html=True
-    )
 
 # Sample texts
 with st.expander("Coba teks contoh"):

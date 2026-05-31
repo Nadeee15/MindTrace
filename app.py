@@ -16,6 +16,19 @@ html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif !important;
 }
 
+/* ── Global dark-mode color reset for custom HTML ── */
+/* Streamlit dark mode sets color on :root / body which cascades into
+   st.markdown HTML blocks. We force every custom class explicitly.    */
+.result-title, .result-sub,
+.rcard-label, .rcard-value, .rcard-conf,
+.insight-name, .insight-desc,
+.ok-title, .ok-desc,
+.sec-label, .eyebrow, .hero-sub, .status-pill,
+.bar-meta, .insight-badge,
+.mt-footer {
+    -webkit-text-fill-color: unset !important;
+}
+
 #MainMenu, footer, header { visibility: hidden; }
 .block-container {
     padding-top: 1.5rem;
@@ -188,11 +201,13 @@ div[data-testid="stButton"] > button:active {
     font-family: 'Syne', sans-serif !important;
     font-size: 19px;
     font-weight: 700;
-    color: #16123A;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
 }
 .result-sub {
     font-size: 12.5px;
-    color: #888;
+    color: #888 !important;
+    -webkit-text-fill-color: #888 !important;
     margin-top: 2px;
 }
 .cards-grid {
@@ -227,24 +242,24 @@ div[data-testid="stButton"] > button:active {
 
 /* card variants */
 .c-distort { background: #EEEDFE; border-color: #AFA9EC; }
-.c-distort .rcard-label { color: #534AB7; }
-.c-distort .rcard-value { color: #26215C; }
-.c-distort .rcard-conf  { color: #534AB7; }
+.c-distort .rcard-label { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
+.c-distort .rcard-value { color: #26215C !important; -webkit-text-fill-color: #26215C !important; }
+.c-distort .rcard-conf  { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
 
 .c-ok { background: #E1F5EE; border-color: #9FE1CB; }
-.c-ok .rcard-label { color: #0F6E56; }
-.c-ok .rcard-value { color: #04342C; }
-.c-ok .rcard-conf  { color: #0F6E56; }
+.c-ok .rcard-label { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
+.c-ok .rcard-value { color: #04342C !important; -webkit-text-fill-color: #04342C !important; }
+.c-ok .rcard-conf  { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
 
 .c-type { background: #16123A; border-color: #3C3489; }
-.c-type .rcard-label { color: #AFA9EC; }
-.c-type .rcard-value { color: #EEEDFE; }
-.c-type .rcard-conf  { color: #7F77DD; }
+.c-type .rcard-label { color: #AFA9EC !important; -webkit-text-fill-color: #AFA9EC !important; }
+.c-type .rcard-value { color: #EEEDFE !important; -webkit-text-fill-color: #EEEDFE !important; }
+.c-type .rcard-conf  { color: #7F77DD !important; -webkit-text-fill-color: #7F77DD !important; }
 
 .c-neutral { background: #f9f9f9; border-color: #eee; }
-.c-neutral .rcard-label,
-.c-neutral .rcard-conf  { color: #aaa; }
-.c-neutral .rcard-value { color: #bbb; }
+.c-neutral .rcard-label { color: #aaa !important; -webkit-text-fill-color: #aaa !important; }
+.c-neutral .rcard-conf  { color: #aaa !important; -webkit-text-fill-color: #aaa !important; }
+.c-neutral .rcard-value { color: #bbb !important; -webkit-text-fill-color: #bbb !important; }
 
 /* ── Insight panel ─────────────────────── */
 .insight {
@@ -262,7 +277,8 @@ div[data-testid="stButton"] > button:active {
 }
 .insight-badge {
     background: #534AB7;
-    color: #EEEDFE;
+    color: #EEEDFE !important;
+    -webkit-text-fill-color: #EEEDFE !important;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -274,11 +290,13 @@ div[data-testid="stButton"] > button:active {
     font-family: 'Syne', sans-serif !important;
     font-size: 16px;
     font-weight: 700;
-    color: #26215C;
+    color: #26215C !important;
+    -webkit-text-fill-color: #26215C !important;
 }
 .insight-desc {
     font-size: 13.5px;
-    color: #3C3489;
+    color: #3C3489 !important;
+    -webkit-text-fill-color: #3C3489 !important;
     line-height: 1.65;
 }
 .bar-wrap { margin-top: 16px; }
@@ -286,7 +304,8 @@ div[data-testid="stButton"] > button:active {
     display: flex;
     justify-content: space-between;
     font-size: 11px;
-    color: #534AB7;
+    color: #534AB7 !important;
+    -webkit-text-fill-color: #534AB7 !important;
     margin-bottom: 6px;
     font-weight: 500;
 }

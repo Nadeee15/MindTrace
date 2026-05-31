@@ -115,13 +115,32 @@ textarea {
     font-size: 14.5px !important;
     line-height: 1.7 !important;
     color: #1a1a2e !important;
-    background: #fff !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
     border: 1.5px solid #DDD9F8 !important;
     border-radius: 16px !important;
+    caret-color: #534AB7 !important;
+}
+textarea::placeholder {
+    color: #bbb !important;
+    -webkit-text-fill-color: #bbb !important;
+    opacity: 1 !important;
 }
 textarea:focus {
     border-color: #7C6FE0 !important;
     box-shadow: 0 0 0 4px rgba(124,111,224,0.1) !important;
+}
+/* Streamlit wraps textarea in a div with data-baseweb */
+div[data-baseweb="textarea"] {
+    background: #ffffff !important;
+}
+div[data-baseweb="textarea"] textarea,
+.stTextArea textarea,
+.stTextArea > div > div > textarea {
+    color: #1a1a2e !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    background: #ffffff !important;
 }
 
 /* ── Streamlit button override ─────────── */
@@ -133,6 +152,7 @@ div[data-testid="stButton"] > button {
     font-weight: 700 !important;
     letter-spacing: 0.03em;
     color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
     background: #534AB7 !important;
     border: none !important;
     border-radius: 14px !important;
@@ -327,12 +347,78 @@ div[data-testid="stExpander"] {
     border-radius: 12px !important;
     overflow: hidden;
     margin-top: 10px;
-    background: #fff;
+    background: #fff !important;
 }
 div[data-testid="stExpander"] summary {
     font-size: 13px !important;
-    color: #666 !important;
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
     padding: 12px 16px !important;
+}
+/* Fix expander table text */
+div[data-testid="stExpander"] p,
+div[data-testid="stExpander"] span,
+div[data-testid="stExpander"] div {
+    color: #1a1a2e !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+}
+div[data-testid="stExpander"] table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff !important;
+}
+div[data-testid="stExpander"] thead tr th {
+    background: #EEEDFE !important;
+    color: #534AB7 !important;
+    -webkit-text-fill-color: #534AB7 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 14px !important;
+    border-bottom: 1.5px solid #DDD9F8 !important;
+    text-align: left !important;
+}
+div[data-testid="stExpander"] tbody tr td {
+    color: #26215C !important;
+    -webkit-text-fill-color: #26215C !important;
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+    border-bottom: 1px solid #F0EEF9 !important;
+    background: #fff !important;
+    vertical-align: top;
+    word-break: break-word;
+}
+div[data-testid="stExpander"] tbody tr:last-child td {
+    border-bottom: none !important;
+}
+div[data-testid="stExpander"] tbody tr:nth-child(even) td {
+    background: #FAFAFE !important;
+}
+
+/* Expander sample text buttons */
+div[data-testid="stExpander"] div[data-testid="stButton"] > button {
+    background: #F5F4FE !important;
+    color: #26215C !important;
+    -webkit-text-fill-color: #26215C !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13.5px !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    text-align: left !important;
+    border: 1px solid #DDD9F8 !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    margin-bottom: 4px !important;
+}
+div[data-testid="stExpander"] div[data-testid="stButton"] > button:hover {
+    background: #EEEDFE !important;
+    border-color: #AFA9EC !important;
+}
+
+/* Global safety: reset webkit-fill for dark-mode interference */
+input, textarea, select, option {
+    -webkit-text-fill-color: inherit;
 }
 </style>
 """, unsafe_allow_html=True)

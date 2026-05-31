@@ -12,21 +12,38 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
+/* ════════════════════════════════════════════════════════════
+   FORCE LIGHT MODE — kills Streamlit dark-theme everywhere
+   ════════════════════════════════════════════════════════════ */
+html, body, .stApp,
+[data-testid="stAppViewContainer"],
+[data-testid="stHeader"],
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stBottom"],
+section.main, section.main > div {
+    background-color: #F4F3FB !important;
+    color: #16123A !important;
+}
+/* Kill the blue/dark highlight Streamlit puts on p/span in markdown */
+.stMarkdown p, .stMarkdown span, .stMarkdown div,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+.element-container p, .element-container span {
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
+}
+/* But let our custom classes override back to their own colors */
+.stMarkdown .hero p,
+.stMarkdown .hero span,
+.stMarkdown .hero div { color: inherit !important; -webkit-text-fill-color: inherit !important; }
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif !important;
-}
-
-/* ── Global dark-mode color reset for custom HTML ── */
-/* Streamlit dark mode sets color on :root / body which cascades into
-   st.markdown HTML blocks. We force every custom class explicitly.    */
-.result-title, .result-sub,
-.rcard-label, .rcard-value, .rcard-conf,
-.insight-name, .insight-desc,
-.ok-title, .ok-desc,
-.sec-label, .eyebrow, .hero-sub, .status-pill,
-.bar-meta, .insight-badge,
-.mt-footer {
-    -webkit-text-fill-color: unset !important;
 }
 
 #MainMenu, footer, header { visibility: hidden; }
@@ -118,7 +135,8 @@ html, body, [class*="css"] {
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #888;
+    color: #888 !important;
+    -webkit-text-fill-color: #888 !important;
     margin-bottom: 8px;
 }
 
@@ -333,12 +351,14 @@ div[data-testid="stButton"] > button:active {
     font-family: 'Syne', sans-serif !important;
     font-size: 16px;
     font-weight: 700;
-    color: #04342C;
+    color: #04342C !important;
+    -webkit-text-fill-color: #04342C !important;
     margin-bottom: 4px;
 }
 .ok-desc {
     font-size: 13px;
-    color: #0F6E56;
+    color: #0F6E56 !important;
+    -webkit-text-fill-color: #0F6E56 !important;
     line-height: 1.6;
 }
 
@@ -353,7 +373,8 @@ div[data-testid="stButton"] > button:active {
 .mt-footer {
     text-align: center;
     font-size: 11px;
-    color: #aaa;
+    color: #aaa !important;
+    -webkit-text-fill-color: #aaa !important;
     margin-top: 2.5rem;
     padding-top: 1rem;
     border-top: 1px solid #EAE8FA;
@@ -439,6 +460,39 @@ div[data-testid="stExpander"] div[data-testid="stButton"] > button:hover {
 input, textarea, select, option {
     -webkit-text-fill-color: inherit;
 }
+
+/* ── Nuclear override: force all custom HTML class text to be visible ── */
+/* Streamlit dark mode sets -webkit-text-fill-color on the root,
+   which cascades and wins over color. We reset it on all our wrappers. */
+.hero *, .result-header *, .cards-grid *,
+.insight *, .ok-banner *, .rcard *,
+.result-icon, .result-title, .result-sub,
+.sec-label, .mt-footer {
+    -webkit-text-fill-color: unset;
+}
+/* Then re-apply explicit colors that must be visible on light backgrounds */
+.result-title { color: #16123A !important; -webkit-text-fill-color: #16123A !important; }
+.result-sub   { color: #666    !important; -webkit-text-fill-color: #666    !important; }
+.sec-label    { color: #666    !important; -webkit-text-fill-color: #666    !important; }
+.mt-footer    { color: #999    !important; -webkit-text-fill-color: #999    !important; }
+.insight-name { color: #26215C !important; -webkit-text-fill-color: #26215C !important; }
+.insight-desc { color: #3C3489 !important; -webkit-text-fill-color: #3C3489 !important; }
+.insight-badge { color: #EEEDFE !important; -webkit-text-fill-color: #EEEDFE !important; }
+.bar-meta     { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
+.ok-title     { color: #04342C !important; -webkit-text-fill-color: #04342C !important; }
+.ok-desc      { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
+.c-distort .rcard-label { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
+.c-distort .rcard-value { color: #26215C !important; -webkit-text-fill-color: #26215C !important; }
+.c-distort .rcard-conf  { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
+.c-ok .rcard-label { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
+.c-ok .rcard-value { color: #04342C !important; -webkit-text-fill-color: #04342C !important; }
+.c-ok .rcard-conf  { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
+.c-type .rcard-label { color: #AFA9EC !important; -webkit-text-fill-color: #AFA9EC !important; }
+.c-type .rcard-value { color: #EEEDFE !important; -webkit-text-fill-color: #EEEDFE !important; }
+.c-type .rcard-conf  { color: #7F77DD !important; -webkit-text-fill-color: #7F77DD !important; }
+.c-neutral .rcard-label,
+.c-neutral .rcard-conf { color: #aaa !important; -webkit-text-fill-color: #aaa !important; }
+.c-neutral .rcard-value { color: #bbb !important; -webkit-text-fill-color: #bbb !important; }
 </style>
 """, unsafe_allow_html=True)
 

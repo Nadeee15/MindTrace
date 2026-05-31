@@ -10,326 +10,349 @@ st.set_page_config(page_title="MindTrace", page_icon="🧠", layout="centered")
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 
-/* ════════════════════════════════════════════════════════════
-   FORCE LIGHT MODE — kills Streamlit dark-theme everywhere
-   ════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   FORCE LIGHT MODE + BASE RESET
+   ══════════════════════════════════════════ */
 html, body, .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stHeader"],
-[data-testid="stToolbar"],
-[data-testid="stDecoration"],
 [data-testid="stBottom"],
-section.main, section.main > div {
-    background-color: #F4F3FB !important;
+section.main, section.main > div,
+.block-container {
+    background-color: #EEEDF8 !important;
     color: #16123A !important;
 }
-/* Kill the blue/dark highlight Streamlit puts on p/span in markdown */
 .stMarkdown p, .stMarkdown span, .stMarkdown div,
 .stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
 .element-container p, .element-container span {
-    background-color: transparent !important;
     background: transparent !important;
     box-shadow: none !important;
     color: #16123A !important;
     -webkit-text-fill-color: #16123A !important;
 }
-/* But let our custom classes override back to their own colors */
-.stMarkdown .hero p,
-.stMarkdown .hero span,
-.stMarkdown .hero div { color: inherit !important; -webkit-text-fill-color: inherit !important; }
-
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif !important;
 }
-
 #MainMenu, footer, header { visibility: hidden; }
 .block-container {
-    padding-top: 1.5rem;
-    padding-bottom: 3rem;
-    max-width: 680px;
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+    max-width: 720px;
 }
 
-/* ── Hero ─────────────────────────────── */
+/* ══════════════════════════════════════════
+   HERO — flat, no card
+   ══════════════════════════════════════════ */
 .hero {
-    position: relative;
-    border-radius: 28px;
-    overflow: hidden;
-    padding: 2.8rem 2.2rem 2.2rem;
-    margin-bottom: 2rem;
-    background: #16123A;
+    padding: 2rem 0 2.8rem 0;
+    margin-bottom: 2.4rem;
 }
-.hero-bg {
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 80% 80% at 110% -10%, #7C6FE0 0%, transparent 60%),
-        radial-gradient(ellipse 60% 60% at -10% 110%, #A78BFA 0%, transparent 55%);
-    pointer-events: none;
-    border-radius: 28px;
-}
-.eyebrow {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 10.5px;
+.hero-eyebrow {
+    font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.13em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #AFA9EC;
-    margin-bottom: 14px;
-}
-.eyebrow-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #7F77DD;
-    display: inline-block;
+    color: #7B74C9 !important;
+    -webkit-text-fill-color: #7B74C9 !important;
+    margin-bottom: 18px;
 }
 .hero-title {
-    position: relative;
     font-family: 'Syne', sans-serif !important;
-    font-size: 3rem;
+    font-size: 4.2rem;
     font-weight: 800;
-    color: #fff;
-    line-height: 1.0;
-    letter-spacing: -1.5px;
-    margin-bottom: 10px;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 18px;
 }
-.hero-title span { color: #AFA9EC; }
 .hero-sub {
-    position: relative;
-    font-size: 13.5px;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.7;
-    max-width: 400px;
-    margin-bottom: 0;
+    font-size: 14px;
+    color: #6B6899 !important;
+    -webkit-text-fill-color: #6B6899 !important;
+    line-height: 1.75;
+    max-width: 480px;
+    margin-bottom: 24px;
 }
-.status-pill {
-    position: relative;
+.hero-status {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    margin-top: 20px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 999px;
-    padding: 7px 16px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.65);
+    gap: 8px;
+    font-size: 12.5px;
+    color: #6B6899 !important;
+    -webkit-text-fill-color: #6B6899 !important;
 }
-.pulse {
-    width: 6px; height: 6px;
+.hero-dot {
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: #4ade80;
     display: inline-block;
-    position: relative;
+    flex-shrink: 0;
 }
 
-/* ── Section label ─────────────────────── */
+/* ══════════════════════════════════════════
+   SECTION LABEL
+   ══════════════════════════════════════════ */
 .sec-label {
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #888 !important;
-    -webkit-text-fill-color: #888 !important;
-    margin-bottom: 8px;
+    color: #7B74C9 !important;
+    -webkit-text-fill-color: #7B74C9 !important;
+    margin-bottom: 10px;
 }
 
-/* ── Textarea override ─────────────────── */
+/* ══════════════════════════════════════════
+   TEXTAREA
+   ══════════════════════════════════════════ */
 textarea {
     font-family: 'DM Sans', sans-serif !important;
     font-size: 14.5px !important;
     line-height: 1.7 !important;
-    color: #1a1a2e !important;
-    -webkit-text-fill-color: #1a1a2e !important;
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    border: 1.5px solid #DDD9F8 !important;
-    border-radius: 16px !important;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
+    background: #fff !important;
+    border: 1.5px solid #C8C4EF !important;
+    border-radius: 14px !important;
     caret-color: #534AB7 !important;
 }
 textarea::placeholder {
-    color: #bbb !important;
-    -webkit-text-fill-color: #bbb !important;
-    opacity: 1 !important;
+    color: #B0ADCE !important;
+    -webkit-text-fill-color: #B0ADCE !important;
 }
 textarea:focus {
-    border-color: #7C6FE0 !important;
-    box-shadow: 0 0 0 4px rgba(124,111,224,0.1) !important;
+    border-color: #534AB7 !important;
+    box-shadow: 0 0 0 3px rgba(83,74,183,0.12) !important;
 }
-/* Streamlit wraps textarea in a div with data-baseweb */
-div[data-baseweb="textarea"] {
-    background: #ffffff !important;
-}
+div[data-baseweb="textarea"],
 div[data-baseweb="textarea"] textarea,
-.stTextArea textarea,
-.stTextArea > div > div > textarea {
-    color: #1a1a2e !important;
-    -webkit-text-fill-color: #1a1a2e !important;
-    background: #ffffff !important;
+.stTextArea textarea {
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
+    background: #fff !important;
 }
 
-/* ── Streamlit button override ─────────── */
+/* ══════════════════════════════════════════
+   BUTTON
+   ══════════════════════════════════════════ */
 div[data-testid="stButton"] > button {
     width: 100%;
-    padding: 14px 20px;
+    padding: 15px 20px;
     font-family: 'Syne', sans-serif !important;
     font-size: 15px !important;
     font-weight: 700 !important;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
     color: #fff !important;
     -webkit-text-fill-color: #fff !important;
     background: #534AB7 !important;
     border: none !important;
     border-radius: 14px !important;
     transition: background .15s, transform .1s !important;
+    cursor: pointer;
 }
 div[data-testid="stButton"] > button:hover {
     background: #3C3489 !important;
-    border: none !important;
 }
 div[data-testid="stButton"] > button:active {
-    transform: scale(0.98) !important;
+    transform: scale(0.985) !important;
 }
 
-/* ── Result cards ──────────────────────── */
+/* ══════════════════════════════════════════
+   DIVIDER
+   ══════════════════════════════════════════ */
+.custom-hr {
+    border: none;
+    border-top: 1px solid #C8C4EF;
+    margin: 2rem 0;
+}
+
+/* ══════════════════════════════════════════
+   RESULT HEADER
+   ══════════════════════════════════════════ */
 .result-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: 14px;
+    margin-bottom: 20px;
 }
-.result-icon {
-    width: 42px; height: 42px;
-    border-radius: 12px;
-    background: #EEEDFE;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #534AB7;
-    font-size: 20px;
+.result-emoji {
+    font-size: 2rem;
+    line-height: 1;
     flex-shrink: 0;
 }
 .result-title {
     font-family: 'Syne', sans-serif !important;
-    font-size: 19px;
+    font-size: 22px;
     font-weight: 700;
     color: #16123A !important;
     -webkit-text-fill-color: #16123A !important;
+    line-height: 1.2;
 }
 .result-sub {
-    font-size: 12.5px;
-    color: #888 !important;
-    -webkit-text-fill-color: #888 !important;
-    margin-top: 2px;
+    font-size: 13px;
+    color: #7B74C9 !important;
+    -webkit-text-fill-color: #7B74C9 !important;
+    margin-top: 3px;
 }
+
+/* ══════════════════════════════════════════
+   RESULT CARDS — outline style
+   ══════════════════════════════════════════ */
 .cards-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: 14px;
+    margin-bottom: 16px;
 }
 .rcard {
-    border-radius: 20px;
-    padding: 20px 18px;
-    border: 1.5px solid transparent;
+    border-radius: 18px;
+    padding: 22px 20px;
+    border: 1.5px solid #C8C4EF;
+    background: #fff;
 }
 .rcard-label {
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    color: #9590C8 !important;
+    -webkit-text-fill-color: #9590C8 !important;
 }
 .rcard-value {
     font-family: 'Syne', sans-serif !important;
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.25;
     word-break: break-word;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
 }
 .rcard-conf {
-    font-size: 12px;
-    margin-top: 6px;
+    font-size: 12.5px;
+    margin-top: 8px;
+    color: #534AB7 !important;
+    -webkit-text-fill-color: #534AB7 !important;
 }
 
-/* card variants */
-.c-distort { background: #EEEDFE; border-color: #AFA9EC; }
-.c-distort .rcard-label { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
-.c-distort .rcard-value { color: #26215C !important; -webkit-text-fill-color: #26215C !important; }
-.c-distort .rcard-conf  { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
+/* distorsi card — subtle left accent */
+.c-distort {
+    border-color: #C8C4EF;
+    border-left: 4px solid #534AB7;
+}
+.c-distort .rcard-value {
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
+}
 
-.c-ok { background: #E1F5EE; border-color: #9FE1CB; }
-.c-ok .rcard-label { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
-.c-ok .rcard-value { color: #04342C !important; -webkit-text-fill-color: #04342C !important; }
-.c-ok .rcard-conf  { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
+/* ok / tidak ada card */
+.c-ok {
+    border-color: #A8DEC9;
+    border-left: 4px solid #22B07D;
+}
+.c-ok .rcard-label {
+    color: #22B07D !important;
+    -webkit-text-fill-color: #22B07D !important;
+}
+.c-ok .rcard-value {
+    color: #0A3D2C !important;
+    -webkit-text-fill-color: #0A3D2C !important;
+}
+.c-ok .rcard-conf {
+    color: #22B07D !important;
+    -webkit-text-fill-color: #22B07D !important;
+}
 
-.c-type { background: #16123A; border-color: #3C3489; }
-.c-type .rcard-label { color: #AFA9EC !important; -webkit-text-fill-color: #AFA9EC !important; }
-.c-type .rcard-value { color: #EEEDFE !important; -webkit-text-fill-color: #EEEDFE !important; }
-.c-type .rcard-conf  { color: #7F77DD !important; -webkit-text-fill-color: #7F77DD !important; }
+/* jenis distorsi — ghost/muted style like reference */
+.c-type {
+    border-color: #C8C4EF;
+    background: #F5F4FC;
+}
+.c-type .rcard-label {
+    color: #9590C8 !important;
+    -webkit-text-fill-color: #9590C8 !important;
+}
+.c-type .rcard-value {
+    color: #534AB7 !important;
+    -webkit-text-fill-color: #534AB7 !important;
+}
+.c-type .rcard-conf {
+    color: #9590C8 !important;
+    -webkit-text-fill-color: #9590C8 !important;
+}
 
-.c-neutral { background: #f9f9f9; border-color: #eee; }
-.c-neutral .rcard-label { color: #aaa !important; -webkit-text-fill-color: #aaa !important; }
-.c-neutral .rcard-conf  { color: #aaa !important; -webkit-text-fill-color: #aaa !important; }
-.c-neutral .rcard-value { color: #bbb !important; -webkit-text-fill-color: #bbb !important; }
+/* neutral / no type detected */
+.c-neutral {
+    border-color: #E0DFF5;
+    background: #F9F8FE;
+}
+.c-neutral .rcard-label,
+.c-neutral .rcard-conf {
+    color: #C0BCDF !important;
+    -webkit-text-fill-color: #C0BCDF !important;
+}
+.c-neutral .rcard-value {
+    color: #C0BCDF !important;
+    -webkit-text-fill-color: #C0BCDF !important;
+}
 
-/* ── Insight panel ─────────────────────── */
+/* ══════════════════════════════════════════
+   INSIGHT PANEL — flat, border only
+   ══════════════════════════════════════════ */
 .insight {
-    border-radius: 20px;
-    padding: 22px;
-    border: 1.5px solid #CECBF6;
-    background: #EEEDFE;
-    margin-bottom: 12px;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1.5px solid #C8C4EF;
+    background: #fff;
+    margin-bottom: 14px;
 }
 .insight-top {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 14px;
 }
 .insight-badge {
-    background: #534AB7;
-    color: #EEEDFE !important;
-    -webkit-text-fill-color: #EEEDFE !important;
     font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+    color: #534AB7 !important;
+    -webkit-text-fill-color: #534AB7 !important;
+    background: #EEEDFB;
     padding: 4px 10px;
     border-radius: 999px;
+    border: 1px solid #C8C4EF;
 }
 .insight-name {
     font-family: 'Syne', sans-serif !important;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
-    color: #26215C !important;
-    -webkit-text-fill-color: #26215C !important;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
 }
 .insight-desc {
-    font-size: 13.5px;
-    color: #3C3489 !important;
-    -webkit-text-fill-color: #3C3489 !important;
-    line-height: 1.65;
+    font-size: 14px;
+    color: #5C578F !important;
+    -webkit-text-fill-color: #5C578F !important;
+    line-height: 1.7;
 }
-.bar-wrap { margin-top: 16px; }
+.bar-wrap { margin-top: 20px; }
 .bar-meta {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
-    color: #534AB7 !important;
-    -webkit-text-fill-color: #534AB7 !important;
-    margin-bottom: 6px;
-    font-weight: 500;
+    font-size: 12px;
+    color: #9590C8 !important;
+    -webkit-text-fill-color: #9590C8 !important;
+    margin-bottom: 8px;
 }
 .bar-track {
-    height: 6px;
-    background: #CECBF6;
+    height: 5px;
+    background: #E0DFF5;
     border-radius: 99px;
     overflow: hidden;
 }
@@ -339,68 +362,55 @@ div[data-testid="stButton"] > button:active {
     background: #534AB7;
 }
 
-/* ── OK banner ─────────────────────────── */
+/* ══════════════════════════════════════════
+   OK BANNER
+   ══════════════════════════════════════════ */
 .ok-banner {
-    border-radius: 20px;
-    padding: 20px 22px;
-    border: 1.5px solid #9FE1CB;
-    background: #E1F5EE;
-    margin-bottom: 12px;
+    border-radius: 18px;
+    padding: 22px 24px;
+    border: 1.5px solid #A8DEC9;
+    background: #fff;
+    margin-bottom: 14px;
 }
 .ok-title {
     font-family: 'Syne', sans-serif !important;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
-    color: #04342C !important;
-    -webkit-text-fill-color: #04342C !important;
-    margin-bottom: 4px;
+    color: #0A3D2C !important;
+    -webkit-text-fill-color: #0A3D2C !important;
+    margin-bottom: 5px;
 }
 .ok-desc {
-    font-size: 13px;
-    color: #0F6E56 !important;
-    -webkit-text-fill-color: #0F6E56 !important;
+    font-size: 13.5px;
+    color: #22B07D !important;
+    -webkit-text-fill-color: #22B07D !important;
     line-height: 1.6;
 }
 
-/* ── Divider ───────────────────────────── */
-.custom-hr {
-    border: none;
-    border-top: 1px solid #E8E5FA;
-    margin: 1.75rem 0;
-}
-
-/* ── Footer ────────────────────────────── */
-.mt-footer {
-    text-align: center;
-    font-size: 11px;
-    color: #aaa !important;
-    -webkit-text-fill-color: #aaa !important;
-    margin-top: 2.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid #EAE8FA;
-    letter-spacing: .04em;
-}
-
-/* ── Expander tweak ────────────────────── */
+/* ══════════════════════════════════════════
+   EXPANDER
+   ══════════════════════════════════════════ */
 div[data-testid="stExpander"] {
-    border: 1.5px solid #DDD9F8 !important;
-    border-radius: 12px !important;
+    border: 1.5px solid #C8C4EF !important;
+    border-radius: 14px !important;
     overflow: hidden;
-    margin-top: 10px;
     background: #fff !important;
 }
 div[data-testid="stExpander"] summary {
-    font-size: 13px !important;
-    color: #444 !important;
-    -webkit-text-fill-color: #444 !important;
-    padding: 12px 16px !important;
+    font-size: 13.5px !important;
+    color: #534AB7 !important;
+    -webkit-text-fill-color: #534AB7 !important;
+    font-weight: 500 !important;
+    padding: 14px 18px !important;
+    background: #fff !important;
 }
-/* Fix expander table text */
 div[data-testid="stExpander"] p,
 div[data-testid="stExpander"] span,
-div[data-testid="stExpander"] div {
-    color: #1a1a2e !important;
-    -webkit-text-fill-color: #1a1a2e !important;
+div[data-testid="stExpander"] td,
+div[data-testid="stExpander"] th {
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
+    background: transparent !important;
 }
 div[data-testid="stExpander"] table {
     width: 100%;
@@ -408,22 +418,22 @@ div[data-testid="stExpander"] table {
     background: #fff !important;
 }
 div[data-testid="stExpander"] thead tr th {
-    background: #EEEDFE !important;
+    background: #F5F4FC !important;
     color: #534AB7 !important;
     -webkit-text-fill-color: #534AB7 !important;
-    font-size: 11px !important;
+    font-size: 10.5px !important;
     font-weight: 700 !important;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 10px 14px !important;
-    border-bottom: 1.5px solid #DDD9F8 !important;
+    padding: 10px 16px !important;
+    border-bottom: 1.5px solid #E0DFF5 !important;
     text-align: left !important;
 }
 div[data-testid="stExpander"] tbody tr td {
-    color: #26215C !important;
-    -webkit-text-fill-color: #26215C !important;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
     font-size: 13px !important;
-    padding: 10px 14px !important;
+    padding: 10px 16px !important;
     border-bottom: 1px solid #F0EEF9 !important;
     background: #fff !important;
     vertical-align: top;
@@ -435,64 +445,39 @@ div[data-testid="stExpander"] tbody tr:last-child td {
 div[data-testid="stExpander"] tbody tr:nth-child(even) td {
     background: #FAFAFE !important;
 }
-
-/* Expander sample text buttons */
+/* Sample buttons inside expander */
 div[data-testid="stExpander"] div[data-testid="stButton"] > button {
-    background: #F5F4FE !important;
-    color: #26215C !important;
-    -webkit-text-fill-color: #26215C !important;
+    background: #F5F4FC !important;
+    color: #16123A !important;
+    -webkit-text-fill-color: #16123A !important;
     font-family: 'DM Sans', sans-serif !important;
     font-size: 13.5px !important;
     font-weight: 400 !important;
     letter-spacing: 0 !important;
     text-align: left !important;
-    border: 1px solid #DDD9F8 !important;
+    border: 1px solid #E0DFF5 !important;
     border-radius: 10px !important;
     padding: 10px 14px !important;
     margin-bottom: 4px !important;
 }
 div[data-testid="stExpander"] div[data-testid="stButton"] > button:hover {
-    background: #EEEDFE !important;
-    border-color: #AFA9EC !important;
+    background: #EEEDFB !important;
+    border-color: #C8C4EF !important;
 }
 
-/* Global safety: reset webkit-fill for dark-mode interference */
-input, textarea, select, option {
-    -webkit-text-fill-color: inherit;
+/* ══════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════ */
+.mt-footer {
+    text-align: center;
+    font-size: 11.5px;
+    color: #9590C8 !important;
+    -webkit-text-fill-color: #9590C8 !important;
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #C8C4EF;
+    letter-spacing: .04em;
 }
-
-/* ── Nuclear override: force all custom HTML class text to be visible ── */
-/* Streamlit dark mode sets -webkit-text-fill-color on the root,
-   which cascades and wins over color. We reset it on all our wrappers. */
-.hero *, .result-header *, .cards-grid *,
-.insight *, .ok-banner *, .rcard *,
-.result-icon, .result-title, .result-sub,
-.sec-label, .mt-footer {
-    -webkit-text-fill-color: unset;
-}
-/* Then re-apply explicit colors that must be visible on light backgrounds */
-.result-title { color: #16123A !important; -webkit-text-fill-color: #16123A !important; }
-.result-sub   { color: #666    !important; -webkit-text-fill-color: #666    !important; }
-.sec-label    { color: #666    !important; -webkit-text-fill-color: #666    !important; }
-.mt-footer    { color: #999    !important; -webkit-text-fill-color: #999    !important; }
-.insight-name { color: #26215C !important; -webkit-text-fill-color: #26215C !important; }
-.insight-desc { color: #3C3489 !important; -webkit-text-fill-color: #3C3489 !important; }
-.insight-badge { color: #EEEDFE !important; -webkit-text-fill-color: #EEEDFE !important; }
-.bar-meta     { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
-.ok-title     { color: #04342C !important; -webkit-text-fill-color: #04342C !important; }
-.ok-desc      { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
-.c-distort .rcard-label { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
-.c-distort .rcard-value { color: #26215C !important; -webkit-text-fill-color: #26215C !important; }
-.c-distort .rcard-conf  { color: #534AB7 !important; -webkit-text-fill-color: #534AB7 !important; }
-.c-ok .rcard-label { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
-.c-ok .rcard-value { color: #04342C !important; -webkit-text-fill-color: #04342C !important; }
-.c-ok .rcard-conf  { color: #0F6E56 !important; -webkit-text-fill-color: #0F6E56 !important; }
-.c-type .rcard-label { color: #AFA9EC !important; -webkit-text-fill-color: #AFA9EC !important; }
-.c-type .rcard-value { color: #EEEDFE !important; -webkit-text-fill-color: #EEEDFE !important; }
-.c-type .rcard-conf  { color: #7F77DD !important; -webkit-text-fill-color: #7F77DD !important; }
-.c-neutral .rcard-label,
-.c-neutral .rcard-conf { color: #aaa !important; -webkit-text-fill-color: #aaa !important; }
-.c-neutral .rcard-value { color: #bbb !important; -webkit-text-fill-color: #bbb !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -562,14 +547,15 @@ def predict(text, tok, model, le):
 # ── Hero ───────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
-  <div class="hero-bg"></div>
-  <div class="eyebrow"><span class="eyebrow-dot"></span>Cognitive Intelligence</div>
-  <div class="hero-title">Mind<span>Trace</span></div>
+  <div class="hero-eyebrow">Cognitive Intelligence</div>
+  <div class="hero-title">MindTrace</div>
   <div class="hero-sub">
     Deteksi dan klasifikasi cognitive distortion dari teks bahasa Indonesia
     menggunakan two-stage IndoBERT + LoRA.
   </div>
-  <div class="status-pill"><span class="pulse"></span>Model siap digunakan</div>
+  <div class="hero-status">
+    <span class="hero-dot"></span>Model siap digunakan
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -587,19 +573,18 @@ text_input = st.text_area(
     label="",
     value=st.session_state.txt,
     placeholder="Tulis atau tempelkan teks di sini...",
-    height=120,
+    height=130,
     label_visibility="collapsed",
     key="main_input",
 )
 
-# Sample texts
 with st.expander("Coba teks contoh"):
     for s in SAMPLES:
         if st.button(s, key=f"s_{s}", use_container_width=True):
             st.session_state.txt = s
             st.rerun()
 
-st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
 run = st.button("Analisis teks", use_container_width=True, type="primary")
 
 # ── Result ─────────────────────────────────────────────────────
@@ -615,12 +600,11 @@ if run:
 
         st.markdown('<div class="custom-hr"></div>', unsafe_allow_html=True)
 
-        # Result header
         result_sub = ("Ditemukan pola pikir terdistorsi."
                       if lbin == "Ya" else "Tidak ada distorsi yang terdeteksi.")
         st.markdown(f"""
 <div class="result-header">
-  <div class="result-icon">🧠</div>
+  <div class="result-emoji">🧠</div>
   <div>
     <div class="result-title">Hasil analisis</div>
     <div class="result-sub">{result_sub}</div>
@@ -657,7 +641,6 @@ if run:
 </div>
 """, unsafe_allow_html=True)
 
-        # Insight / OK banner
         if lmul:
             desc = DESCRIPTIONS.get(lmul, "")
             pct  = int(cmul * 100)
@@ -687,7 +670,6 @@ if run:
 </div>
 """, unsafe_allow_html=True)
 
-        # Technical detail
         with st.expander("Detail teknis"):
             st.markdown(f"""
 | Field | Value |

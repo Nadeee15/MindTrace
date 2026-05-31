@@ -44,46 +44,78 @@ html, body, [class*="css"] {
 }
 
 /* ══════════════════════════════════════════
-   HERO — flat, no card
+   HERO — dark card with gradient
    ══════════════════════════════════════════ */
 .hero {
-    padding: 2rem 0 2.8rem 0;
-    margin-bottom: 2.4rem;
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 2.6rem 2.4rem 2.4rem;
+    margin-bottom: 2.6rem;
+    background: #1A1545;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 90% 90% at 105% -5%, #6C5FC7 0%, transparent 55%),
+        radial-gradient(ellipse 70% 70% at -5% 105%, #8B6FD4 0%, transparent 50%);
+    border-radius: 24px;
+    pointer-events: none;
 }
 .hero-eyebrow {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #7B74C9 !important;
-    -webkit-text-fill-color: #7B74C9 !important;
+    color: #AFA9EC !important;
+    -webkit-text-fill-color: #AFA9EC !important;
     margin-bottom: 18px;
 }
+.hero-eyebrow-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #7B74C9;
+    display: inline-block;
+    flex-shrink: 0;
+}
 .hero-title {
+    position: relative;
     font-family: 'Syne', sans-serif !important;
-    font-size: 4.2rem;
+    font-size: 3.8rem;
     font-weight: 800;
-    color: #16123A !important;
-    -webkit-text-fill-color: #16123A !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
     line-height: 1;
     letter-spacing: -2px;
     margin-bottom: 18px;
 }
 .hero-sub {
-    font-size: 14px;
-    color: #6B6899 !important;
-    -webkit-text-fill-color: #6B6899 !important;
+    position: relative;
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.55) !important;
+    -webkit-text-fill-color: rgba(255,255,255,0.55) !important;
     line-height: 1.75;
-    max-width: 480px;
-    margin-bottom: 24px;
+    max-width: 440px;
+    margin-bottom: 26px;
 }
 .hero-status {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 12.5px;
-    color: #6B6899 !important;
-    -webkit-text-fill-color: #6B6899 !important;
+    color: rgba(255,255,255,0.65) !important;
+    -webkit-text-fill-color: rgba(255,255,255,0.65) !important;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    padding: 7px 16px;
 }
 .hero-dot {
     width: 7px; height: 7px;
@@ -547,7 +579,7 @@ def predict(text, tok, model, le):
 # ── Hero ───────────────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
-  <div class="hero-eyebrow">Cognitive Intelligence</div>
+  <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Cognitive Intelligence</div>
   <div class="hero-title">MindTrace</div>
   <div class="hero-sub">
     Deteksi dan klasifikasi cognitive distortion dari teks bahasa Indonesia

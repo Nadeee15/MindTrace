@@ -82,11 +82,17 @@ st.markdown("""
     text-transform: uppercase;
     margin-bottom: 0.6rem;
 }
+
+/* FIX: word-break supaya teks panjang tidak kecil/terpotong */
 .rcard-value {
     font-size: 1.15rem;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.3;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
+
 .rcard-conf {
     font-size: 0.75rem;
     margin-top: 0.35rem;
@@ -147,6 +153,18 @@ st.markdown("""
     line-height: 1.5;
 }
 
+/* ── Warning banner ─────────────────────── */
+.warn-banner {
+    background: rgba(251,191,36,0.1);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    color: #fbbf24;
+    font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+}
+
 /* ── Detail table ───────────────────────── */
 .detail-table {
     width: 100%;
@@ -162,7 +180,6 @@ st.markdown("""
 .detail-table td:first-child {
     color: #a5b4fc !important;
     font-weight: 600;
-    color: #9ca3af;
     white-space: nowrap;
     width: 38%;
 }
@@ -212,11 +229,20 @@ SAMPLES = [
 
 # ── Helpers ───────────────────────────────────────────────────
 def clean_text(text: str) -> str:
+    """
+    Harus SAMA PERSIS dengan clean_text_light di notebook training.
+    $ sengaja TIDAK dihapus agar konsisten dengan data training.
+    """
     text = str(text).lower()
     text = re.sub(r"http\S+|www\S+", " ", text)
-    text = re.sub(r"@\w+|#", " ", text)
+    text = re.sub(r"@\w+", " ", text)
+    text = re.sub(r"#", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
+
+def has_special_chars(text: str) -> bool:
+    """Cek apakah teks mengandung karakter khusus seperti $."""
+    return bool(re.search(r"[$%^&*]", text))
 
 @st.cache_resource(show_spinner=False)
 def load_models():
@@ -261,7 +287,7 @@ st.markdown("""
 with st.spinner("Memuat model..."):
     tok, model1, le1, model2, le2 = load_models()
 
-st.markdown('<div class="status-ok">Model siap digunakan</div>', unsafe_allow_html=True)
+st.markdown('<div class="status-ok">✓ &nbsp;Model siap digunakan</div>', unsafe_allow_html=True)
 
 # ── Input ─────────────────────────────────────────────────────
 st.markdown('<div class="section-label">Teks analisis</div>', unsafe_allow_html=True)
@@ -272,6 +298,15 @@ if "txt" not in st.session_state:
 text_input = st.text_area("", value=st.session_state.txt,
     placeholder="Ketik atau tempel teks di sini...",
     height=120, label_visibility="collapsed", key="main_input")
+
+# Peringatan jika ada karakter khusus seperti $
+if text_input and has_special_chars(text_input):
+    st.markdown(
+        '<div class="warn-banner">⚠️ Teks mengandung karakter khusus (seperti <b>$</b>) '
+        'yang tidak dikenal model. Hasil analisis mungkin kurang akurat. '
+        'Coba hapus karakter tersebut.</div>',
+        unsafe_allow_html=True
+    )
 
 # Sample texts
 with st.expander("Coba teks contoh"):

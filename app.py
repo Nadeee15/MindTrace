@@ -545,6 +545,7 @@ def clean_text(text: str) -> str:
     text = re.sub(r"http\S+|www\S+", " ", text)
     text = re.sub(r"@\w+", " ", text)
     text = re.sub(r"#", " ", text)
+    text = text.replace("$", " ")
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
@@ -703,11 +704,15 @@ if run:
 """, unsafe_allow_html=True)
 
         with st.expander("Detail teknis"):
+            safe_text = text_input[:120].replace('$', '\\$')
+            if len(text_input) > 120:
+                safe_text += "…"
+            safe_cleaned = clean_text(text_input)[:100].replace('$', '\\$')
             st.markdown(f"""
 | Field | Value |
 |---|---|
-| Teks asli | {text_input[:120]}{"…" if len(text_input)>120 else ""} |
-| Setelah preprocessing | {clean_text(text_input)[:100]} |
+| Teks asli | {safe_text} |
+| Setelah preprocessing | {safe_cleaned} |
 | Model 1 output | {lbin} ({cbin:.4f}) |
 | Model 2 output | {f"{lmul} ({cmul:.4f})" if lmul else "—"} |
 | Device | {str(DEVICE).upper()} |

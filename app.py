@@ -519,33 +519,39 @@ M2_PATH    = "./model_2_multiclass"
 MAX_LENGTH = 128
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+# Label yang digunakan model persis mengikuti LABEL_MERGE_MAP di notebook:
+# Mind Reading + Fortune-telling + Overgeneralization → Jumping to Conclusions
+# Emotional Reasoning → Personalization and Blame
+# Labeling → All-or-nothing
+# Magnification or Minimization → Mental filter
 DESCRIPTIONS = {
-    "All-or-nothing"           : "Berpikir dalam kategori hitam-putih, tanpa melihat nuansa di antaranya.",
-    "Discounting the positives": "Mengabaikan atau meremehkan hal-hal positif yang nyata terjadi.",
-    "Emotional Reasoning"      : "Menganggap perasaan negatif sebagai kebenaran faktual.",
-    "Jumping to Conclusions"   : "Mengambil kesimpulan negatif tanpa bukti yang memadai.",
-    "Labeling"                 : "Memberi label negatif secara menyeluruh pada diri sendiri atau orang lain.",
-    "Mental filter"            : "Fokus berlebihan pada satu detail negatif, mengabaikan gambaran besar.",
-    "Overgeneralization"       : "Menarik kesimpulan luas dari satu kejadian buruk.",
-    "Personalization and Blame": "Menyalahkan diri sendiri atas hal-hal di luar kendali.",
-    "Should statement"         : "Menetapkan standar kaku dengan kata 'harus' atau 'seharusnya'.",
+    "All-or-nothing"           : "Berpikir dalam kategori ekstrem hitam-putih — termasuk memberi label negatif (labeling) pada diri sendiri atau orang lain. Tidak ada ruang untuk nuansa di tengah.",
+    "Discounting the positives": "Mengabaikan atau meremehkan hal-hal positif yang nyata terjadi, seolah tidak berarti.",
+    "Jumping to Conclusions"   : "Mengambil kesimpulan negatif tanpa bukti yang memadai — mencakup mind reading (menebak pikiran orang lain), fortune-telling (meramal masa depan buruk), dan overgeneralisasi dari satu kejadian.",
+    "Mental filter"            : "Fokus berlebihan pada satu detail negatif sambil mengabaikan gambaran besar — termasuk memperbesar masalah atau mengecilkan hal positif (magnification/minimization).",
+    "Personalization and Blame": "Menyalahkan diri sendiri atas hal-hal di luar kendali, atau menganggap perasaan negatif sebagai kebenaran faktual tentang realita.",
+    "Should statement"         : "Menetapkan standar kaku pada diri sendiri atau orang lain dengan kata 'harus', 'seharusnya', atau 'wajib'.",
 }
 
 SAMPLES = [
-    "Aku merasa semua orang pasti membenciku.",
-    "Kalau aku gagal sekali, berarti aku tidak akan pernah berhasil.",
-    "Aku harus selalu sempurna dalam semua hal.",
-    "Dia tidak membalas chatku, pasti dia marah padaku.",
-    "Hari ini aku makan bersama keluarga dan merasa senang.",
+    "Kalau aku gagal sekali, berarti aku memang tidak akan pernah berhasil.",      # All-or-nothing
+    "Dia tidak membalas chatku, pasti dia marah dan tidak suka padaku.",            # Jumping to Conclusions
+    "Aku harus selalu sempurna dalam semua hal, tidak boleh ada kesalahan.",        # Should statement
+    "Semua hal buruk selalu terjadi padaku saja, tidak ada yang peduli.",           # Mental filter
+    "Ini semua salahku, pasti aku yang membuat semuanya menjadi kacau.",            # Personalization and Blame
+    "Nilai ujianku bagus, tapi itu hanya kebetulan, tidak ada yang spesial.",       # Discounting the positives
+    "Hari ini aku makan bersama keluarga dan merasa senang.",                       # No distortion
 ]
 
 # ── Helpers ────────────────────────────────────────────────────
+# Preprocessing harus konsisten dengan clean_text_light di notebook training.
+# Catatan: tanda $ adalah highlight marker distorsi dalam dataset, dan TIDAK
+# dihapus saat training — jadi inference juga tidak boleh menghapusnya.
 def clean_text(text: str) -> str:
     text = str(text).lower()
     text = re.sub(r"http\S+|www\S+", " ", text)
     text = re.sub(r"@\w+", " ", text)
     text = re.sub(r"#", " ", text)
-    text = text.replace("$", " ")
     text = re.sub(r"\s+", " ", text).strip()
     return text
 

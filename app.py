@@ -533,14 +533,15 @@ DESCRIPTIONS = {
     "Should statement"         : "Menetapkan standar kaku pada diri sendiri atau orang lain dengan kata 'harus', 'seharusnya', atau 'wajib'.",
 }
 
+# Sampel diambil langsung dari data test nyata (test (2).csv & val.csv), satu per kelas model
 SAMPLES = [
-    "Kalau aku gagal sekali, berarti aku memang tidak akan pernah berhasil.",      # All-or-nothing
-    "Dia tidak membalas chatku, pasti dia marah dan tidak suka padaku.",            # Jumping to Conclusions
-    "Aku harus selalu sempurna dalam semua hal, tidak boleh ada kesalahan.",        # Should statement
-    "Semua hal buruk selalu terjadi padaku saja, tidak ada yang peduli.",           # Mental filter
-    "Ini semua salahku, pasti aku yang membuat semuanya menjadi kacau.",            # Personalization and Blame
-    "Nilai ujianku bagus, tapi itu hanya kebetulan, tidak ada yang spesial.",       # Discounting the positives
-    "Hari ini aku makan bersama keluarga dan merasa senang.",                       # No distortion
+    "$Aku adalah anak yang tidak berguna$",                                                                                                                                                           # All-or-nothing (Labeling → All-or-nothing)
+    "saya diterima di suatu jurusan namun banyak orang lain yang diterima. $saya berpikir bahwa saya diterima karena jurusan ini sepi peminat dan nilai yang dibutuhkan tidak terlalu besar$",        # Discounting the positives
+    "$Saya sepertinya akan gagal intervie pekerjaan lagi$",                                                                                                                                            # Jumping to Conclusions (Fortune-telling)
+    "saat $saya ditolak snbp saya merasa itu sebuah masalah besar dan saya mengganggap dunia sangat hancur ketika itu$",                                                                               # Mental filter (Magnification)
+    "Ketika teman saya menceritakan masalahnya dan meminta untuk diberikan saran namun saran tersebut tidak dipergunakan maka saya merasa bersalah karna teman saya tidak memakai saran saya.",        # Personalization and Blame
+    "Pernah, $saya seharusnya tidak pernah membuang waktu dengan sia-sia bermain$ saat saya masih di sekolah menengah.",                                                                               # Should statement
+    "Saya pernah mengikuti kata-kata teman saya untuk tidak mengikuti mata pelajaran fisika sehingga saya bolos dan pergi bermain bersama teman saya.",                                                # No Distortion
 ]
 
 # ── Helpers ────────────────────────────────────────────────────

@@ -533,15 +533,15 @@ DESCRIPTIONS = {
     "Should statement"         : "Menetapkan standar kaku pada diri sendiri atau orang lain dengan kata 'harus', 'seharusnya', atau 'wajib'.",
 }
 
-# Sampel diambil langsung dari data test nyata (test (2).csv & val.csv), satu per kelas model
+# Sampel dari data split final (test (5).csv & val (4).csv) — satu per kelas label_final
 SAMPLES = [
-    "$Aku adalah anak yang tidak berguna$",                                                                                                                                                           # All-or-nothing (Labeling → All-or-nothing)
-    "saya diterima di suatu jurusan namun banyak orang lain yang diterima. $saya berpikir bahwa saya diterima karena jurusan ini sepi peminat dan nilai yang dibutuhkan tidak terlalu besar$",        # Discounting the positives
-    "$Saya sepertinya akan gagal intervie pekerjaan lagi$",                                                                                                                                            # Jumping to Conclusions (Fortune-telling)
-    "saat $saya ditolak snbp saya merasa itu sebuah masalah besar dan saya mengganggap dunia sangat hancur ketika itu$",                                                                               # Mental filter (Magnification)
-    "Ketika teman saya menceritakan masalahnya dan meminta untuk diberikan saran namun saran tersebut tidak dipergunakan maka saya merasa bersalah karna teman saya tidak memakai saran saya.",        # Personalization and Blame
-    "Pernah, $saya seharusnya tidak pernah membuang waktu dengan sia-sia bermain$ saat saya masih di sekolah menengah.",                                                                               # Should statement
-    "Saya pernah mengikuti kata-kata teman saya untuk tidak mengikuti mata pelajaran fisika sehingga saya bolos dan pergi bermain bersama teman saya.",                                                # No Distortion
+    "saat sem 2 ipk saya turun, $saya melabel diri saya sendiri malas$",                                                                                                                        # All-or-nothing
+    "Saya mendapat nilai A saat ujian tapi $Saya berpikir itu karena keberuntungan.$",                                                                                                          # Discounting the positives
+    "Saya berpikir bahwa $saya akan selalu gagal dalam matematika$",                                                                                                                             # Jumping to Conclusions
+    "Saya tidak bisa berhenti memikirkan komentar negatif itu.",                                                                                                                                 # Mental filter
+    "Ketika teman saya menceritakan masalahnya dan meminta untuk diberikan saran namun saran tersebut tidak dipergunakan maka saya merasa bersalah karna teman saya tidak memakai saran saya.",  # Personalization and Blame
+    "$Seharusnya saya bisa belajar lebih baik lagi$",                                                                                                                                            # Should statement
+    "Saya pernah mengikuti kata-kata teman saya untuk tidak mengikuti mata pelajaran fisika sehingga saya bolos dan pergi bermain bersama teman saya.",                                           # No Distortion
 ]
 
 # ── Helpers ────────────────────────────────────────────────────
